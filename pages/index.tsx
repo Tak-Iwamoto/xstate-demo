@@ -1,15 +1,29 @@
-import Link from 'next/link'
-import Layout from '../components/Layout'
+import { NextPage } from "next";
 
-const IndexPage = () => (
-  <Layout title="Home | Next.js + TypeScript Example">
-    <h1>Hello Next.js 👋</h1>
-    <p>
-      <Link href="/about">
-        <a>About</a>
-      </Link>
-    </p>
-  </Layout>
-)
+import { ReservationFlowState } from "../state";
+import { DateSelect } from "../components/DateSelect";
+import { useReservationFlowState } from "./_app";
+import { CustomerInfo } from "../components/CustomerInfo";
+import { PaymentInput } from "../components/PaymentInput";
+import { Confirm } from "../components/Confirm";
 
-export default IndexPage
+const IndexPage: NextPage = () => {
+  const { state: currentState } = useReservationFlowState();
+
+  return (
+    <div>
+      <div>
+        {currentState.matches(ReservationFlowState.DATE) && <DateSelect />}
+        {currentState.matches(ReservationFlowState.CUSTOMER_INFO) && (
+          <CustomerInfo />
+        )}
+        {currentState.matches(ReservationFlowState.PAYMENT) && <PaymentInput />}
+        {currentState.matches(ReservationFlowState.CONFIRM) && <Confirm />}
+        {currentState.matches(ReservationFlowState.COMPLETED) && (
+          <div>completed!</div>
+        )}
+      </div>
+    </div>
+  );
+};
+export default IndexPage;
